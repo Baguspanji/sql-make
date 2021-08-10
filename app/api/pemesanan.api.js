@@ -4,6 +4,7 @@ const PemesananDetail = require('../models').pemesanan_detail;
 exports.findAll = (req, res) => {
     Pemesanan
         .findAll({
+            where: { user_id: req.user.id },
             include: [PemesananDetail],
             attributes: ['id_pemesanan', 'total']
         })
@@ -25,12 +26,13 @@ exports.findAll = (req, res) => {
 exports.create = (req, res) => {
     Pemesanan
         .create({
+            user_id: req.user.id,
             total: req.body.total
         })
         .then((pemesanan) => {
             var barangs = req.body.barangs
             console.log(barangs)
-            
+
             barangs.forEach(barang => {
                 console.log(pemesanan.id_pemesanan);
                 PemesananDetail
@@ -67,7 +69,8 @@ exports.findOne = (req, res) => {
     Pemesanan
         .findOne({
             where: {
-                id_pemesanan: req.params.id
+                id_pemesanan: req.params.id,
+                user_id: req.user.id
             },
             include: [PemesananDetail],
             attributes: ['id_pemesanan', 'total']
