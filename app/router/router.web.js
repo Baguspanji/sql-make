@@ -14,5 +14,10 @@ module.exports = (app) => {
 
     router.get('/get_barang', controller.barang.getBarang)
 
+    // Login
+    router.get('/login', controller.user.home)
+    router.post('/login', controller.user.login)
+    router.get('/logout', controller.user.logout)
+
     app.use('/', router)
 }

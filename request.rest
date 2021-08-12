@@ -1,6 +1,6 @@
 @url = http://localhost:3000
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjI4NTg2OTY5LCJleHAiOjE2Mjg2NzMzNjl9.LQaq4_7NqMWv0heGI67kF-NcvbYSXhHoKH2UPytC5sQ
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjI4NzYwMjE4LCJleHAiOjE2Mjg4NDY2MTh9.xB24K3Sj2cz1eajNDidIAFXwiot3YN4eVEQJeY2nKU0
 
 GET {{ url }}/api/user HTTP/1.1
 Authorization: Bearer {{ token }}

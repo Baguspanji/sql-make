@@ -21,11 +21,25 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
         <!-- Navbar Search -->
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
+                <img src="/assets/img/avatar4.png" class="img-circle elevation-1" style="width: 30px;" alt="User Image">
+            </a>
+            <div class="dropdown-menu dropdown-menu-md-left dropdown-menu-right" style="left: inherit; right: 0px;">
+                <span class="dropdown-item dropdown-header">Menu</span>
+                <!-- <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                    <i class="fas fa-envelope mr-2"></i> 4 new messages
+                    <span class="float-right text-muted text-sm">3 mins</span>
+                </a> -->
+                <a href="/logout" class="dropdown-item dropdown-footer bg-danger">Sign Out</a>
+            </div>
+        </li>
         <li class="nav-item">
             <!-- <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                 <i class="fas fa-search"></i>
-            </a>
-            <div class="navbar-search-block">
+            </a> -->
+            <!-- <div class="navbar-search-block">
                 <form class="form-inline">
                     <div class="input-group input-group-sm">
                         <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
@@ -49,7 +63,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="/" class="brand-link">
         <img src="/assets/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">AdminLTE 3</span>
     </a>
