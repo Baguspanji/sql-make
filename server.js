@@ -25,7 +25,9 @@ var sesi = {
     secret: env.ACCESS_SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: {}
+    cookie: {
+        maxAge: 60000
+    }
 }
 
 if (env.NODE_ENV === 'production') {

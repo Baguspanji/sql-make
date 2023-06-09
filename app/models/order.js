@@ -3,8 +3,6 @@ const {
   Model
 } = require('sequelize');
 
-const order_detail = require('./order_detail');
-
 module.exports = (sequelize, DataTypes) => {
   class order extends Model {
     /**
@@ -14,10 +12,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // order_detail.belongsTo(models.order, {
-      //   foreignKey: 'order_id',
-      //   targetKey: 'id'
-      // })
+      order.hasMany(models.order_detail, {
+        foreignKey: 'order_id',
+        sourceKey: 'id'
+      })
     }
   };
   order.init({

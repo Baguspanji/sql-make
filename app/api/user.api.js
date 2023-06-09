@@ -1,102 +1,157 @@
-const User = require('../models').user;
-const bcrypt = require('bcryptjs')
+const User = require("../models").user;
+const bcrypt = require("bcryptjs");
 
-const jwt = require('../../config/config_jwt')
+const jwt = require("../../config/config_jwt");
 
-exports.signUp = (req, res) => {
-    User
-        .create({
-            username: req.body.username,
-            nama: req.body.nama,
-            email: req.body.email,
-            password: bcrypt.hashSync(req.body.password, 8)
-        })
-        .then((user) => {
-            res.status(200).send({
-                status: true,
-                message: 'item created succesfully',
-                data: user
-            })
-        })
-        .catch((error) => {
-            res.status(401).send({
-                status_response: 'Bad Request',
-                errors: error.errors
-            })
-        })
-}
+exports.signUp = async (req, res) => {
+    var body = req.body;
+    body.password = bcrypt.hashSync(req.body.password, 12);
 
-exports.signIn = (req, res) => {
-    User
-        .findOne({
-            where: {
-                username: req.body.username,
+    const user = await User.findOne({
+        where: {
+            username: body.username,
+        },
+    });
+
+    const email = await User.findOne({
+        where: {
+            email: body.email,
+        },
+    });
+
+    if (user)
+        return res.status(401).send({
+            status: false,
+            message: "Username already exist",
+            data: {
+                username: body.username,
+                accessToken: null,
             },
-        }).then(user => {
-            if (!user) {
-                return res.status(404).send({
-                    status: false,
-                    message: "Error",
-                    data: {
-                        username: req.body.username,
-                        accessToken: null,
-                    }
-                })
-            }
+        });
 
-            var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-            if (!passwordIsValid) {
-                return res.status(401).send({
-                    status: false,
-                    message: "Error",
-                    data: {
-                        username: req.body.username,
-                        accessToken: null,
-                    },
-                })
-            }
+    if (email)
+        return res.status(401).send({
+            status: false,
+            message: "Email already exist",
+            data: {
+                email: body.email,
+                accessToken: null,
+            },
+        });
 
-            var token = jwt.token({ id: user.id_user })
+    try {
+        const data = await User.create(body);
 
-            res.status(200).send({
-                status: true,
-                message: "Login Success",
-                data: {
-                    user,
-                    accessToken: token,
-                },
-            })
-        }).catch(err => {
-            res.status(500).send({
+        res.status(200).send({
+            status: true,
+            message: "Register Success",
+            data: {
+                user: data,
+                accessToken: null,
+            },
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: false,
+            message: "Register Failed",
+            data: {
+                user: null,
+                accessToken: null,
+            },
+            errors: error,
+        });
+    }
+};
+
+exports.signIn = async (req, res) => {
+    const body = req.body;
+
+    try {
+        const user = await User.findOne({
+            where: {
+                username: body.username,
+            },
+        })
+
+        if (!user) {
+            return res.status(404).send({
                 status: false,
+                message: "Error user not found",
                 data: {
-                    name: req.body.name,
+                    username: body.username,
                     accessToken: null,
                 },
-                errors: err
-            })
-        })
-}
+            });
+        }
 
-exports.findOne = (req, res) => {
-    User
-        .findOne({
-            where: {
-                id_user: req.user.id
+        var passwordIsValid = bcrypt.compareSync(
+            body.password,
+            user.password
+        );
+        if (!passwordIsValid) {
+            return res.status(401).send({
+                status: false,
+                message: "Error password is invalid",
+                data: {
+                    username: body.username,
+                    accessToken: null,
+                },
+            });
+        }
+
+        var token = jwt.token({
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            name: user.name,
+        });
+
+        user.password = undefined;
+
+        res.status(200).send({
+            status: true,
+            message: "Login Success",
+            data: {
+                user,
+                accessToken: token,
             },
-            attributes: ['id_user', 'username', 'nama', 'email']
         })
-        .then((user) => {
-            res.status(200).send({
-                status: true,
-                message: 'item succesfully',
-                data: user
-            })
+    } catch (error) {
+        res.status(500).send({
+            status: false,
+            data: {
+                name: body.name,
+                accessToken: null,
+            },
+            errors: error,
+        });
+    }
+};
+
+exports.findOne = async (req, res) => {
+    const userData = req.user;
+
+    try {
+        const user = await User.findOne({
+            where: {
+                id: userData.id,
+                username: userData.username,
+                email: userData.email,
+            },
+            attributes: ["id", "username", "name", "email"],
         })
-        .catch((error) => {
-            res.status(401).send({
-                status_response: 'Bad Request',
-                errors: error.errors
-            })
-        })
-}
+
+        res.status(200).send({
+            status: true,
+            message: "Get User Success",
+            data: user,
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: false,
+            message: "error",
+            data: null,
+            errors: error,
+        });
+    }
+};

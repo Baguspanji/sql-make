@@ -3,9 +3,6 @@ const {
   Model
 } = require('sequelize');
 
-const order = require('./order');
-const item = require('./item');
-
 module.exports = (sequelize, DataTypes) => {
   class order_detail extends Model {
     /**
@@ -15,15 +12,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // order.belongsTo(models.order, {
-      //   foreignKey: 'order_id',
-      //   targetKey: 'id'
-      // })
+      order_detail.belongsTo(models.order, {
+        foreignKey: 'order_id',
+        targetKey: 'id'
+      })
 
-      // item.belongsTo(models.item, {
-      //   foreignKey: 'item_id',
-      //   targetKey: 'id'
-      // })
+      order_detail.belongsTo(models.item, {
+        foreignKey: 'item_id',
+        targetKey: 'id'
+      })
     }
   };
   order_detail.init({
@@ -53,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 1
     },
-    jumlah: {
+    total: {
       type: DataTypes.INTEGER,
       defaultValue: 0
     }

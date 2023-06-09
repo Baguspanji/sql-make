@@ -10,22 +10,19 @@ module.exports = (app) =>{
     router.get('/user', jwt.authenticateToken ,api.user.findOne)
 
     // Barang
-    router.get('/barang', api.barang.findAll)
-    router.post('/barang', jwt.authenticateToken ,api.barang.create)
-    router.get('/barang/:id', api.barang.findOne)
-    router.put('/barang/:id', jwt.authenticateToken ,api.barang.update)
-    router.delete('/barang/:id', api.barang.destroy)
+    router.get('/item', api.item.findAll)
+    router.get('/item/:id', api.item.findOne)
 
-    // Pemesanan
-    router.get('/pemesanan', jwt.authenticateToken ,api.pemesanan.findAll)
-    router.post('/pemesanan', jwt.authenticateToken ,api.pemesanan.create)
-    router.get('/pemesanan/:id', jwt.authenticateToken ,api.pemesanan.findOne)
-    // router.put('/pemesanan/:id', api.pemesanan.update)
-    router.delete('/pemesanan/:id', jwt.authenticateToken ,api.pemesanan.destroy)
+    // order
+    router.get('/order', jwt.authenticateToken ,api.order.findAll)
+    router.post('/order', jwt.authenticateToken ,api.order.create)
+    router.get('/order/:id', jwt.authenticateToken ,api.order.findOne)
+    // router.put('/order/:id', api.order.update)
+    // router.delete('/order/:id', jwt.authenticateToken ,api.order.destroy)
 
-    // PemesananDetail
-    router.get('/pemesanan_detail', jwt.authenticateToken ,api.pemesanan_detail.findAll)
-    router.get('/pemesanan_detail/:id', jwt.authenticateToken ,api.pemesanan_detail.findOne)
+    // orderDetail
+    // router.get('/order_detail', jwt.authenticateToken ,api.order_detail.findAll)
+    // router.get('/order_detail/:id', jwt.authenticateToken ,api.order_detail.findOne)
 
     app.use('/api', router)
 }
