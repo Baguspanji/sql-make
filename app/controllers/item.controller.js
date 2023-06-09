@@ -13,7 +13,10 @@ exports.findAll = (req, res) => {
 exports.getItem = (req, res) => {
     Item
         .findAll({
-            attributes: ['id', 'name', 'price', 'strike_price']
+            order : [
+                ['id', 'DESC']
+            ],
+            attributes: ['id', 'name', 'price', 'strike_price', 'image']
         })
         .then((items) => {
 
@@ -27,6 +30,7 @@ exports.getItem = (req, res) => {
                 var hapus = '<a href="/item/delete/' + item.id + '" class="btn btn-danger">Hapus</a>'
                 var row = [
                     i,
+                    '<img src="' + item.image + '" width="180px" />',
                     item.name,
                     toRupiah.convertToRupiah(item.price),
                     toRupiah.convertToRupiah(item.strike_price),
@@ -77,7 +81,7 @@ exports.findOne = (req, res) => {
             where: {
                 id: req.params.id
             },
-            attributes: ['id', 'name', 'price', 'strike_price']
+            attributes: ['id', 'name', 'price', 'strike_price', 'image']
         })
         .then((item) => {
             res.status(200).send({
@@ -100,7 +104,7 @@ exports.formEdit = (req, res) => {
             where: {
                 id: req.params.id
             },
-            attributes: ['id', 'name', 'price', 'strike_price']
+            attributes: ['id', 'name', 'price', 'strike_price', 'image']
         })
         .then((item) => {
 
@@ -155,4 +159,23 @@ exports.destroy = (req, res) => {
                 errors: error.errors
             })
         })
+}
+
+exports.uploadFile = async (req, res) => {
+    try {
+        // take path after public
+        const file = req.file.path.split('public')[1];
+        const url = file;
+
+        res.status(200).send({
+            status: true,
+            message: 'File berhasil diupload',
+            data: url
+        })
+    } catch (error) {
+        res.status(401).send({
+            status_response: 'Bad Request',
+            errors: error.errors
+        })
+    }
 }

@@ -17,26 +17,22 @@ exports.login = (req, res) => {
             },
         }).then(user => {
             if (!user) {
-                return res.status(404).send({
-                    status: false,
-                    message: "Error",
-                    data: {
-                        username: req.body.username,
-                        accessToken: null,
-                    }
-                })
+                res.locals = {
+                    title: 'Login Admin',
+                    message: 'User tidak ditemukan'
+                };
+
+                return res.render('auth/login');
             }
 
             var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
             if (!passwordIsValid) {
-                return res.status(401).send({
-                    status: false,
-                    message: "Error",
-                    data: {
-                        username: req.body.username,
-                        accessToken: null,
-                    },
-                })
+                res.locals = {
+                    title: 'Login Admin',
+                    message: 'Password salah'
+                };
+
+                return res.render('auth/login');
             }
 
             sess = req.session;
@@ -46,14 +42,14 @@ exports.login = (req, res) => {
             res.redirect('/')
 
         }).catch(err => {
-            res.status(500).send({
-                status: false,
-                data: {
-                    name: req.body.name,
-                    accessToken: null,
-                },
-                errors: err
-            })
+            console.log(err);
+
+            res.locals = {
+                title: 'Login Admin',
+                message: 'Username atau Password salah'
+            };
+
+            res.render('auth/login');
         })
 }
 

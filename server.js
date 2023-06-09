@@ -55,8 +55,7 @@ app.get('/', (req, res, next) => {
 
 
     res.locals = {
-        title: 'Main View',
-        message: 'This is a message'
+        title: 'Dashboard',
     };
 
     res.render('index');

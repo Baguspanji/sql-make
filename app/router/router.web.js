@@ -1,6 +1,9 @@
 const router = require('express').Router()
 const controller = require('../controllers')
 
+const multer = require('multer');
+const { diskStorage } = require('../utils/multer');
+
 module.exports = (app) => {
 
     // item
@@ -13,6 +16,7 @@ module.exports = (app) => {
     router.get('/item/delete/:id', controller.item.destroy)
 
     router.get('/get_item', controller.item.getItem)
+    router.post('/upload', multer({ storage: diskStorage }).single("file"), controller.item.uploadFile)
 
     // Login
     router.get('/login', controller.user.home)

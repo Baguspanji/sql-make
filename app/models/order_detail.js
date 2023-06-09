@@ -57,6 +57,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'order_detail',
+    deletedAt: 'deletedAt',
+    paranoid: true,
+    timestamps: true,
   });
   return order_detail;
 };

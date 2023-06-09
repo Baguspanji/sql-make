@@ -36,11 +36,18 @@ module.exports = (sequelize, DataTypes) => {
     strike_price: {
       type: DataTypes.INTEGER,
       allowNull: true
-    }
+    },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
   }, {
     sequelize,
     modelName: 'item',
-    tableName: 'items'
+    tableName: 'items',
+    deletedAt: 'deletedAt',
+    paranoid: true,
+    timestamps: true,
   });
   return item;
 };
