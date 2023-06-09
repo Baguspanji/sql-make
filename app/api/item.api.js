@@ -16,7 +16,7 @@ exports.findAll = async (req, res) => {
                 [Op.like]: `%${keyword}%`
             }
         },
-        attributes: ['id', 'name', 'price', 'strike_price']
+        attributes: ['id', 'name', 'price', 'strike_price', 'image']
     }
 
     try {
@@ -48,7 +48,7 @@ exports.findOne = async (req, res) => {
                 where: {
                     id: req.params.id
                 },
-                attributes: ['id', 'name', 'price', 'strike_price']
+                attributes: ['id', 'name', 'price', 'strike_price', 'image']
             })
 
         res.status(200).send({
