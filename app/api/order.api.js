@@ -1,25 +1,39 @@
+const { getPagination } = require('../utils/pagination');
+
 const Order = require('../models').order;
 const OrderDetail = require('../models').order_detail;
 
 const Item = require('../models').item;
 
 exports.findAll = async (req, res) => {
+    const keyword = req.query.keyword || ''
+    const page = req.query.page || 1
+    const limit = req.query.limit || 10
+
+    const query = {
+        where: {
+            user_id: req.user.id,
+            // name: {
+            //     [Op.like]: `%${keyword}%`
+            // }
+        },
+        attributes: ['id', 'total_amount']
+    }
+
     try {
-        const order = await Order
-            .findAll({
-                where: {
-                    user_id: req.user.id
-                },
-                include: [
-                    OrderDetail
-                ],
-                attributes: ['id', 'total_amount']
-            })
+        const totalItems = await Order.count(query)
+
+        query.include = [
+            OrderDetail
+        ]
+        query.limit = limit ? +limit : 10
+        query.offset = (page - 1) * limit
+        const order = await Order.findAll(query)
 
         res.status(200).send({
             status: true,
             message: 'item succesfully',
-            data: order
+            data: getPagination(order, page, limit, totalItems),
         })
     } catch (error) {
         res.status(500).send({
