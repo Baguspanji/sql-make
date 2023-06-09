@@ -2,8 +2,11 @@
 const {
   Model
 } = require('sequelize');
+
+const order_detail = require('./order_detail');
+
 module.exports = (sequelize, DataTypes) => {
-  class pemesanan_detail extends Model {
+  class item extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,42 +14,36 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      pemesanan_detail.belongsTo(models.pemesanan, {
-        foreignKey: 'pemesanan_id',
-        targetKey: 'id_pemesanan'
-      })
-
-      pemesanan_detail.belongsTo(models.barang, {
-        foreignKey: 'barang_id',
-        targetKey: 'id_barang'
-      })
+      // order_detail.belongsToMany(models.item, {
+      //   through: 'order_detail',
+      //   as: 'items',
+      //   foreignKey: 'item_id'
+      // })
     }
   };
-  pemesanan_detail.init({
-    id_pemesanan_detail: {
+  item.init({
+    id: {
+      primaryKey: true,
       allowNull: false,
       autoIncrement: true,
-      primaryKey: true,
       type: DataTypes.INTEGER
     },
-    pemesanan_id: {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    price: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    barang_id: {
+    strike_price: {
       type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    qty: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    jumlah: {
-      type: DataTypes.INTEGER
+      allowNull: true
     }
   }, {
     sequelize,
-    modelName: 'pemesanan_detail',
+    modelName: 'item',
+    tableName: 'items'
   });
-  return pemesanan_detail;
+  return item;
 };

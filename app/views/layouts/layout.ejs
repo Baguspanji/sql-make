@@ -54,12 +54,12 @@
                                             </h1>
                                         </div>
                                         <!-- /.col -->
-                                        <div class="col-sm-6">
+                                        <!-- <div class="col-sm-6">
                                             <ol class="breadcrumb float-sm-right">
                                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                                                 <li class="breadcrumb-item active">Dashboard v1</li>
                                             </ol>
-                                        </div>
+                                        </div> -->
                                         <!-- /.col -->
                                     </div>
                                     <!-- /.row -->
@@ -131,7 +131,7 @@
                     <% if (typeof tabel_list !=='undefined' ) { %>
                         <script>
                             $(function() {
-                                $("#example1").DataTable({
+                                $("#table-1").DataTable({
                                     "ajax": '<%= tabel_list %>',
                                     "responsive": true,
                                     // "lengthChange": false,

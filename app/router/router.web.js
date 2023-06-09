@@ -3,16 +3,16 @@ const controller = require('../controllers')
 
 module.exports = (app) => {
 
-    // Barang
-    router.get('/barang', controller.barang.findAll)
-    router.get('/barang/add', controller.barang.formAdd)
-    router.post('/barang', controller.barang.create)
-    router.get('/barang/edit/:id', controller.barang.formEdit)
-        // router.get('/barang/:id', controller.barang.findOne)
-    router.post('/barang/:id', controller.barang.update)
-    router.get('/barang/delete/:id', controller.barang.destroy)
+    // item
+    router.get('/item', controller.item.findAll)
+    router.get('/item/add', controller.item.formAdd)
+    router.post('/item', controller.item.create)
+    router.get('/item/edit/:id', controller.item.formEdit)
+        // router.get('/item/:id', controller.item.findOne)
+    router.post('/item/:id', controller.item.update)
+    router.get('/item/delete/:id', controller.item.destroy)
 
-    router.get('/get_barang', controller.barang.getBarang)
+    router.get('/get_item', controller.item.getItem)
 
     // Login
     router.get('/login', controller.user.home)

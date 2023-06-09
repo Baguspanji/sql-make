@@ -1,47 +1,35 @@
-const Barang = require('../models').barang;
+const Item = require('../models').item;
 const toRupiah = require('../helpers/toRupiah')
 
 exports.findAll = (req, res) => {
-    Barang
-        .findAll({
-            attributes: ['id_barang', 'nama_barang', 'harga']
-        })
-        .then((barang) => {
-            res.locals = {
-                title: 'List Barang',
-                barangs: barang,
-                tabel_list: '/get_barang'
-            };
+    res.locals = {
+        title: 'Daftar Barang',
+        tabel_list: '/get_item'
+    };
 
-            res.render('barang');
-        })
-        .catch((error) => {
-            res.status(401).send({
-                status_response: 'Bad Request',
-                errors: error
-            })
-        })
+    res.render('item');
 }
 
-exports.getBarang = (req, res) => {
-    Barang
+exports.getItem = (req, res) => {
+    Item
         .findAll({
-            attributes: ['id_barang', 'nama_barang', 'harga']
+            attributes: ['id', 'name', 'price', 'strike_price']
         })
-        .then((barangs) => {
+        .then((items) => {
 
             var list = [];
             let i = 0;
 
-            barangs.forEach(barang => {
+            items.forEach(item => {
                 i++
 
-                var edit = '<a href="/barang/edit/' + barang.id_barang + '" class="btn btn-warning">Edit</a>'
-                var hapus = '<a href="/barang/delete/' + barang.id_barang + '" class="btn btn-danger">Hapus</a>'
+                var edit = '<a href="/item/edit/' + item.id + '" class="btn btn-warning">Edit</a>'
+                var hapus = '<a href="/item/delete/' + item.id + '" class="btn btn-danger">Hapus</a>'
                 var row = [
                     i,
-                    barang.nama_barang,
-                    toRupiah.convertToRupiah(barang.harga),
+                    item.name,
+                    toRupiah.convertToRupiah(item.price),
+                    toRupiah.convertToRupiah(item.strike_price),
                     edit + ' ' + hapus
                 ]
                 list.push(row)
@@ -64,17 +52,16 @@ exports.formAdd = (req, res) => {
         title: 'Tambah Barang',
     };
 
-    res.render('barang/form');
+    res.render('item/form');
 }
 
 exports.create = (req, res) => {
-    Barang
-        .create({
-            nama_barang: req.body.nama_barang,
-            harga: req.body.harga
-        })
-        .then((barang) => {
-            res.redirect('/barang');
+    const body = req.body;
+
+    Item
+        .create(body)
+        .then((_) => {
+            res.redirect('/item');
         })
         .catch((error) => {
             res.status(401).send({
@@ -85,18 +72,18 @@ exports.create = (req, res) => {
 }
 
 exports.findOne = (req, res) => {
-    Barang
+    Item
         .findOne({
             where: {
-                id_barang: req.params.id
+                id: req.params.id
             },
-            attributes: ['id_barang', 'nama_barang', 'harga']
+            attributes: ['id', 'name', 'price', 'strike_price']
         })
-        .then((barang) => {
+        .then((item) => {
             res.status(200).send({
                 status: true,
-                message: 'item succesfully',
-                data: barang
+                message: 'Data berhasil ditemukan',
+                data: item
             })
         })
         .catch((error) => {
@@ -108,21 +95,21 @@ exports.findOne = (req, res) => {
 }
 
 exports.formEdit = (req, res) => {
-    Barang
+    Item
         .findOne({
             where: {
-                id_barang: req.params.id
+                id: req.params.id
             },
-            attributes: ['id_barang', 'nama_barang', 'harga']
+            attributes: ['id', 'name', 'price', 'strike_price']
         })
-        .then((barang) => {
+        .then((item) => {
 
             res.locals = {
                 title: 'Edit Barang',
-                data: barang,
+                data: item,
             };
 
-            res.render('barang/form');
+            res.render('item/form');
         })
         .catch((error) => {
             res.status(401).send({
@@ -133,17 +120,16 @@ exports.formEdit = (req, res) => {
 }
 
 exports.update = (req, res) => {
-    Barang
-        .update({
-            nama_barang: req.body.nama_barang,
-            harga: req.body.harga
-        }, {
+    const body = req.body;
+
+    Item
+        .update(body, {
             where: {
-                id_barang: req.params.id
+                id: req.params.id
             }
         })
-        .then((barang) => {
-            res.redirect('/barang');
+        .then((_) => {
+            res.redirect('/item');
         })
         .catch((error) => {
             res.status(401).send({
@@ -154,14 +140,14 @@ exports.update = (req, res) => {
 }
 
 exports.destroy = (req, res) => {
-    Barang
+    Item
         .destroy({
             where: {
-                id_barang: req.params.id
+                id: req.params.id
             }
         })
-        .then((barang) => {
-            res.redirect('/barang');
+        .then((_) => {
+            res.redirect('/item');
         })
         .catch((error) => {
             res.status(401).send({
