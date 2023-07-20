@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    'shipper_province_id': {
+    'shipper_id': {
       type: DataTypes.INTEGER
     },
     'name': {

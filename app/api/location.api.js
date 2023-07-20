@@ -7,6 +7,11 @@ const shipperCity = require("../models").shipper_city;
 const shipperDistrict = require("../models").shipper_district;
 const shipperSubdistrict = require("../models").shipper_subdistrict;
 
+const province = require("../models").province;
+const city = require("../models").city;
+const district = require("../models").district;
+const subdistrict = require("../models").subdistrict;
+
 const axios = require('axios');
 const { sequelize } = require("../models");
 
@@ -88,7 +93,13 @@ exports.getCityRajaongkir = async (req, res) => {
 };
 
 exports.getSubdistrictRajaongkir = async (req, res) => {
-    const cities = await rajaongkirCity.findAll()
+    const page = req.query.page || 1
+    const limit = req.query.limit || 100
+    var offset = (page - 1) * limit
+    const cities = await rajaongkirCity.findAll({
+        offset: offset,
+        limit: limit
+    })
 
     const t = await sequelize.transaction();
 
@@ -129,7 +140,6 @@ exports.getSubdistrictRajaongkir = async (req, res) => {
         })
     }
 };
-
 
 exports.getProvinceShipper = async (req, res) => {
     const response = await axios.get('https://merchant-api-sandbox.shipper.id/v3/location/country/228/provinces?limit=50', {
@@ -325,10 +335,174 @@ exports.getSubdistrictShipper = async (req, res) => {
     }
 };
 
-exports.mapingProvince = async (req, res) => {
-    const provinces = await rajaongkirProvince.findAll()
+exports.mappingProvince = async (req, res) => {
+    const rajaongkir_province = await rajaongkirProvince.findAll()
 
     const t = await sequelize.transaction();
+
+    try {
+        for (let i = 0; i < rajaongkir_province.length; i++) {
+            const element = rajaongkir_province[i];
+
+            const shipper_province = await shipperProvince.findOne({
+                where: {
+                    name: element.name
+                }
+            })
+
+            await province.upsert({
+                id: element.id,
+                name: element.name,
+                shipper_id: shipper_province ? shipper_province.id : null,
+                latitude: shipper_province ? shipper_province.latitude : null,
+                longitude: shipper_province ? shipper_province.longitude : null
+            }, { transaction: t })
+        }
+
+        await t.commit();
+
+        res.json({
+            message: 'Success'
+        })
+    } catch (error) {
+        await t.rollback();
+
+        res.json({
+            message: 'Failed',
+            error
+        })
+    }
+}
+
+exports.mappingCity = async (req, res) => {
+    const rajaongkir_city = await rajaongkirCity.findAll()
+
+    const t = await sequelize.transaction();
+
+    try {
+        for (let i = 0; i < rajaongkir_city.length; i++) {
+            const element = rajaongkir_city[i];
+
+            const shipper_city = await shipperCity.findOne({
+                where: {
+                    name: element.name
+                }
+            })
+
+            var type = ''
+            if (element.type == 'Kabupaten') {
+                type = 'Kab.'
+            } else if (element.type == 'Kota') {
+                type = 'Kota'
+            }
+
+            await city.upsert({
+                id: element.id,
+                province_id: element.province_id,
+                name: type + ' ' + element.name,
+                shipper_id: shipper_city ? shipper_city.id : null,
+                latitude: shipper_city ? shipper_city.latitude : null,
+                longitude: shipper_city ? shipper_city.longitude : null,
+                postal_code: element.postal_code
+            }, { transaction: t })
+        }
+
+        await t.commit();
+
+        res.json({
+            message: 'Success'
+        })
+    } catch (error) {
+        await t.rollback();
+
+        res.json({
+            message: 'Failed',
+            error
+        })
+    }
+}
+
+exports.mappingDistrict = async (req, res) => {
+    const rajaongkir_subdistrict = await rajaongkirSubdistrict.findAll()
+
+    const t = await sequelize.transaction();
+
+    try {
+        for (let i = 0; i < rajaongkir_subdistrict.length; i++) {
+            const element = rajaongkir_subdistrict[i];
+
+            const shipper_district = await shipperDistrict.findOne({
+                where: {
+                    name: element.name
+                }
+            })
+
+            await district.upsert({
+                id: element.id,
+                city_id: element.city_id,
+                name: element.name,
+                shipper_id: shipper_district ? shipper_district.id : null,
+                latitude: shipper_district ? shipper_district.latitude : null,
+                longitude: shipper_district ? shipper_district.longitude : null
+            }, { transaction: t })
+        }
+
+        await t.commit();
+
+        res.json({
+            message: 'Success'
+        })
+    } catch (error) {
+        await t.rollback();
+
+        console.log(error)
+
+        res.json({
+            message: 'Failed',
+            error
+        })
+    }
+}
+
+exports.mappingSubdistrict = async (req, res) => {
+    const shipper_subdistrict = await shipperSubdistrict.findAll()
+
+    const t = await sequelize.transaction();
+
+    try {
+        for (let i = 0; i < shipper_subdistrict.length; i++) {
+            const element = shipper_subdistrict[i];
+
+            const district_data = await district.findOne({
+                where: {
+                    shipper_id: element.district_id
+                }
+            })
+
+            await subdistrict.upsert({
+                id: element.id,
+                district_id: district_data ? district_data.id : null,
+                name: element.name,
+                shipper_id: element.id,
+                latitude: element.latitude,
+                longitude: element.longitude,
+                postcode: element.postcode
+            }, { transaction: t })
+        }
+
+        await t.commit();
+
+        res.json({
+            message: 'Success'
+        })
+    } catch (error) {
+        await t.rollback();
+
+        res.json({
+            message: 'Failed',
+            error
+        })
+    }
 }
 
 exports.searchByLatLong = async (req, res) => {

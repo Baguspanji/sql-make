@@ -7,7 +7,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      'shipper_province_id': {
+      'shipper_id': {
         type: Sequelize.INTEGER,
         allowNull: true,
       },
@@ -37,7 +37,7 @@ module.exports = {
           key: 'id'
         }
       },
-      'shipper_city_id': {
+      'shipper_id': {
         type: Sequelize.INTEGER,
         allowNull: true,
       },
@@ -71,7 +71,7 @@ module.exports = {
           key: 'id'
         }
       },
-      'shipper_district_id': {
+      'shipper_id': {
         type: Sequelize.INTEGER,
         allowNull: true,
       },
@@ -105,7 +105,7 @@ module.exports = {
           key: 'id'
         }
       },
-      'shipper_subdistrict_id': {
+      'shipper_id': {
         type: Sequelize.INTEGER,
         allowNull: true,
       },
@@ -117,6 +117,10 @@ module.exports = {
         allowNull: true,
       },
       'longitude': {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      'postcode': {
         type: Sequelize.STRING,
         allowNull: true,
       },

@@ -13,7 +13,10 @@ module.exports = (app) =>{
     router.get('/district-shipper', api.location.getDistrictShipper)
     router.get('/subdistrict-shipper', api.location.getSubdistrictShipper)
 
-    router.get('/province-mapping', api.location.mapingProvince)
+    router.get('/province-mapping', api.location.mappingProvince)
+    router.get('/city-mapping', api.location.mappingCity)
+    router.get('/district-mapping', api.location.mappingDistrict)
+    router.get('/subdistrict-mapping', api.location.mappingSubdistrict)
 
     router.post('/search', api.location.searchByLatLong)
 

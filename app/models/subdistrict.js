@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      models.subdistrict.belongsTo(models.shipper_district, {
+      models.subdistrict.belongsTo(models.district, {
         foreignKey: 'district_id',
       })
     }
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     'district_id': {
       type: DataTypes.INTEGER
     },
-    'shipper_subdistrict_id': {
+    'shipper_id': {
       type: DataTypes.INTEGER
     },
     'name': {
