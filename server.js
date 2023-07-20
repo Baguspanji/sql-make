@@ -2,11 +2,6 @@ require('dotenv').config()
 const env = process.env
 const express = require('express')
 const cors = require('cors')
-const path = require('path')
-
-const expressLayouts = require('express-ejs-layouts');
-
-const session = require('express-session')
 
 const {
     sequelize
@@ -21,48 +16,13 @@ app.use(express.urlencoded({
     extended: true
 }))
 
-var sesi = {
-    secret: env.ACCESS_SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        maxAge: 60000
-    }
-}
-
-if (env.NODE_ENV === 'production') {
-    app.set('trust proxy', 1) // trust first proxy
-    sesi.cookie.secure = true // serve secure cookies
-}
-
-app.use(session(sesi))
-
-app.use(express.static(path.join(__dirname, '/app/public')));
-
-app.set('views', path.join(__dirname, 'app/views'))
-app.set('view engine', 'ejs')
-app.use(expressLayouts)
-app.set('layout', 'layouts/layout');
-
-// app.set('layout extractScripts', true)
-// app.set('layout extractStyles', true)
-
 app.get('/', (req, res, next) => {
-    sess = req.session;
-
-    console.log(sess);
-    if (sess.username == null) res.redirect('/login');
-
-
-    res.locals = {
-        title: 'Dashboard',
-    };
-
-    res.render('index');
+    res.json({
+        message: 'Welcome to the API'
+    })
 })
 
 require('./app/router/router.api')(app)
-require('./app/router/router.web')(app)
 
 try {
     app.listen(PORT, () => console.log(`Server listen on http://localhost:${PORT}`))

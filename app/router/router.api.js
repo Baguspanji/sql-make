@@ -1,28 +1,21 @@
 const router = require('express').Router()
 const api = require('../api')
-const jwt = require('../../config/config_jwt')
 
 module.exports = (app) =>{
 
     // User
-    router.post('/signup', api.user.signUp)
-    router.post('/signin', api.user.signIn)
-    router.get('/user', jwt.authenticateToken ,api.user.findOne)
+    router.get('/province-rajaongkir', api.location.getProvinceRajaongkir)
+    router.get('/city-rajaongkir', api.location.getCityRajaongkir)
+    router.get('/subdistrict-rajaongkir', api.location.getSubdistrictRajaongkir)
 
-    // Barang
-    router.get('/item', api.item.findAll)
-    router.get('/item/:id', api.item.findOne)
+    router.get('/province-shipper', api.location.getProvinceShipper)
+    router.get('/city-shipper', api.location.getCityShipper)
+    router.get('/district-shipper', api.location.getDistrictShipper)
+    router.get('/subdistrict-shipper', api.location.getSubdistrictShipper)
 
-    // order
-    router.get('/order', jwt.authenticateToken ,api.order.findAll)
-    router.post('/order', jwt.authenticateToken ,api.order.create)
-    router.get('/order/:id', jwt.authenticateToken ,api.order.findOne)
-    // router.put('/order/:id', api.order.update)
-    // router.delete('/order/:id', jwt.authenticateToken ,api.order.destroy)
+    router.get('/province-mapping', api.location.mapingProvince)
 
-    // orderDetail
-    // router.get('/order_detail', jwt.authenticateToken ,api.order_detail.findAll)
-    // router.get('/order_detail/:id', jwt.authenticateToken ,api.order_detail.findOne)
+    router.post('/search', api.location.searchByLatLong)
 
     app.use('/api', router)
 }
